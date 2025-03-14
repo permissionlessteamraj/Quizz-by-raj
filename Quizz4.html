@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Quiz App</title>
+    <link rel="stylesheet" href="style.css">
+  <style>body {
+    font-family: Arial, sans-serif;
+    background: #1e1e2e;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    background: #2c2c3e;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+}
+
+input, button {
+    display: block;
+    width: 90%;
+    margin: 10px auto;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+button {
+    background: #ff4c4c;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+#options button {
+    background: #3a3a52;
+}
+
+#options button:hover {
+    background: #ff4c4c;
+}
+
+/* Correct & Incorrect Answer Colors */
+.correct {
+    background: green !important;
+    color: white;
+}
+
+.wrong {
+    background: red !important;
+    color: white;
+}
+
+/* Timer Styling */
+#timer {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+</style></head>
+<body>
+    <div class="container">
+        <h2>Dynamic Quiz</h2>
+        
+        <div id="user-info">
+            <input type="text" id="name" placeholder="Enter your name" required>
+            <input type="text" id="phone" placeholder="Enter your phone number" required>
+            <button onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <div id="quiz-container" style="display: none;">
+            <h3 id="question"></h3>
+            <div id="options"></div>
+            <p id="timer"></p>
+        </div>
+
+        <div id="result-container" style="display: none;">
+            <h3>Quiz Completed!</h3>
+            <p id="score"></p>
+            <button onclick="restartQuiz()">Restart</button>
+        </div>
+    </div>
+
+    <script>// Telegram Bot Details
+const TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN";  // 🔹 Apna bot token lagayein
+const TELEGRAM_CHAT_ID = "YOUR_CHAT_ID";  // 🔹 Apna chat ID lagayein
+
+// Quiz Data (Dynamic Questions)
+const quizData = [
+    { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4" },
+    { question: "Capital of France?", options: ["Paris", "London", "Rome", "Berlin"], answer: "Paris" },
+    { question: "Largest planet?", options: ["Mars", "Earth", "Jupiter", "Venus"], answer: "Jupiter" }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let userName = "";
+let userPhone = "";
+let timer;
+
+// Quiz Start
+function startQuiz() {
+    userName = document.getElementById("name").value.trim();
+    userPhone = document.getElementById("phone").value.trim();
+
+    if (userName === "" || userPhone === "") {
+        alert("Please enter your name and phone number.");
+        return;
+    }
+
+    document.getElementById("user-info").style.display = "none";
+    document.getElementById("quiz-container").style.display = "block";
+    loadQuestion();
+}
+
+// Load Question with Timer
+function loadQuestion() {
+    if (currentQuestion >= quizData.length) {
+        endQuiz();
+        return;
+    }
+
+    let q = quizData[currentQuestion];
+    document.getElementById("question").innerText = q.question;
+    let optionsHtml = "";
+
+    q.options.forEach(option => {
+        optionsHtml += `<button onclick="checkAnswer(this, '${option}')">${option}</button>`;
+    });
+
+    document.getElementById("options").innerHTML = optionsHtml;
+
+    startTimer();
+}
+
+// Timer Functionality
+function startTimer() {
+    let timeLeft = 10;
+    document.getElementById("timer").innerText = `Time Left: ${timeLeft}s`;
+
+    clearInterval(timer);
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = `Time Left: ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            nextQuestion();
+        }
+    }, 1000);
+}
+
+// Answer Checking
+function checkAnswer(button, selected) {
+    clearInterval(timer);
+
+    let correctAnswer = quizData[currentQuestion].answer;
+    
+    if (selected === correctAnswer) {
+        button.classList.add("correct");
+        score++;
+    } else {
+        button.classList.add("wrong");
+    }
+
+    // Disable all buttons after selection
+    let allButtons = document.querySelectorAll("#options button");
+    allButtons.forEach(btn => btn.disabled = true);
+
+    setTimeout(nextQuestion, 1000);
+}
+
+// Next Question
+function nextQuestion() {
+    currentQuestion++;
+    loadQuestion();
+}
+
+// Quiz End
+function endQuiz() {
+    document.getElementById("quiz-container").style.display = "none";
+    document.getElementById("result-container").style.display = "block";
+    document.getElementById("score").innerText = `You scored: ${score} / ${quizData.length}`;
+
+    sendToTelegram();
+}
+
+// Send Data to Telegram
+function sendToTelegram() {
+    let message = `📢 *New Quiz Submission*\n\n👤 *Name:* ${userName}\n📞 *Phone:* ${userPhone}\n🎯 *Score:* ${score}/${quizData.length}\n`;
+    
+    let url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+    
+    fetch(url)
+        .then(response => console.log("Data sent to Telegram"))
+        .catch(error => console.error("Error sending data to Telegram", error));
+}
+
+// Restart Quiz
+function restartQuiz() {
+    currentQuestion = 0;
+    score = 0;
+    document.getElementById("result-container").style.display = "none";
+    document.getElementById("user-info").style.display = "block";
+}
+</script>
+</body>
+</html>
