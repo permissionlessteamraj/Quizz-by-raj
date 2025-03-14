@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSC CGL Quiz Landing Page</title>
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #1a2a6c, #b21f1f, #fdbb2d);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      overflow-x: hidden;
+      color: #fff;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Left Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 100;
+    }
+    .sidebar .sidebar-header {
+      text-align: center;
+      font-size: 1.8em;
+      margin-bottom: 40px;
+      font-weight: bold;
+    }
+    .sidebar nav ul {
+      list-style: none;
+    }
+    .sidebar nav ul li {
+      margin: 20px 0;
+      text-align: center;
+    }
+    .sidebar nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 1.1em;
+      transition: color 0.3s;
+    }
+    .sidebar nav ul li a:hover {
+      color: #fdbb2d;
+    }
+    /* Right Fixed Social Icons */
+    .fixed-social {
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 100;
+    }
+    .social-icon {
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.3s, background 0.3s;
+    }
+    .social-icon:hover {
+      transform: scale(1.1);
+    }
+    .social-icon.telegram { background: #0088cc; }
+    .social-icon.whatsapp { background: #25D366; }
+    .social-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+    /* Main Content Area */
+    .main-content {
+      margin-left: 270px; /* Sidebar ke liye space */
+      padding: 50px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    .content-container {
+      background: rgba(0, 0, 0, 0.75);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 800px;
+      width: 100%;
+      animation: fadeIn 1s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .content-container h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .content-container p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+    .get-started-btn {
+      background: #fdbb2d;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.5em;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.3s, background 0.3s;
+      margin-bottom: 40px;
+    }
+    .get-started-btn:hover {
+      transform: scale(1.1);
+      background: #e6951b;
+    }
+    /* Subject Buttons */
+    .subject-buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .subject-btn {
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
+      color: #fff;
+      padding: 20px 40px;
+      font-size: 1.5em;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .subject-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+    /* Modal Form Styles */
+    #formModal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    #formModal .modal-content {
+      background: #fff;
+      color: #333;
+      padding: 20px 30px;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 100%;
+      position: relative;
+    }
+    #formModal .modal-content h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    #formModal .modal-content input,
+    #formModal .modal-content textarea,
+    #formModal .modal-content select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #formModal .modal-content button {
+      padding: 10px 20px;
+      background: #1a2a6c;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .sidebar { width: 200px; padding: 20px; }
+      .main-content { margin-left: 220px; padding: 30px 10px; }
+      .get-started-btn { font-size: 1.3em; padding: 12px 25px; }
+      .subject-btn { font-size: 1.3em; padding: 15px 30px; }
+    }
+    @media (max-width: 480px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; padding: 20px; }
+      .fixed-social { right: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Left Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">SSC CGL Quiz</div>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">More</a></li>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Right Fixed Social Icons -->
+  <div class="fixed-social">
+    <a href="https://t.me/yourtelegram" target="_blank" class="social-icon telegram" title="Telegram">
+      <!-- Telegram Icon -->
+      <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+        <path d="M120 0C53.73 0 0 53.73 0 120c0 66.27 53.73 120 120 120s120-53.73 120-120C240 53.73 186.27 0 120 0zm56.7 82.25l-18.9 89.3c-1.43 6.33-5.23 7.88-10.6 4.93l-29.36-21.67-14.17 13.67c-1.57 1.57-2.87 2.87-5.85 2.87l2.1-30.02 54.66-49.4c2.38-2.1-.52-3.28-3.66-1.18L78.3 119.02l-29.43-9.2c-6.4-2-6.53-6.4 1.35-9.5l114.57-44.18c5.37-2 10.06 1.32 8.91 9.18z"/>
+      </svg>
+    </a>
+    <a href="https://wa.me/yourwhatsapp" target="_blank" class="social-icon whatsapp" title="WhatsApp">
+      <!-- WhatsApp Icon -->
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 3C9.372 3 4 8.372 4 15c0 2.645.82 5.112 2.231 7.184L3 29l7.847-2.246C12.888 27.178 14.388 27.5 16 27.5c6.628 0 12-5.372 12-12S22.628 3 16 3zm0 22c-1.69 0-3.316-.468-4.706-1.27l-.338-.198L7 26l1.46-4.236-.218-.35C7.502 20.119 7 18.617 7 17c0-4.963 4.037-9 9-9s9 4.037 9 9-4.037 9-9 9z"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <div class="content-container">
+      <h1>Welcome to SSC CGL Quiz</h1>
+      <p>Test your skills in Math, Reasoning, English, and GK with our advanced quiz platform.</p>
+      <!-- Get Started Button (clickable only after form submission) -->
+      <button class="get-started-btn requiresForm" id="getStartedBtn">Get Started</button>
+      <!-- Subject Buttons -->
+      <div class="subject-buttons">
+        <!-- In sabhi buttons par click se pahle form aayega; agar form already submit ho chuka hai, to direct redirect hoga -->
+        <a href="quizz.html" target="_blank" class="subject-btn requiresForm">English</a>
+        <a href="https://example.com/math" target="_blank" class="subject-btn requiresForm">Math</a>
+        <a href="https://example.com/reasoning" target="_blank" class="subject-btn requiresForm">Reasoning</a>
+        <a href="https://example.com/gk" target="_blank" class="subject-btn requiresForm">GK</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Form (Hidden by default) -->
+  <div id="formModal">
+    <div class="modal-content">
+      <h2>Fill Your Details</h2>
+      <form id="userForm">
+        <label for="picture">Upload Picture</label>
+        <input type="file" id="picture" name="picture" accept="image/*" />
+        
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="number" name="age" placeholder="Age" required />
+        <textarea name="address" placeholder="Address" required></textarea>
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="tel" name="phone" placeholder="Phone Number" required />
+        <select name="gender" required>
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+        <button type="submit">Submit Details</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Section -->
+  <script>
+    // Global variable to store intended redirection URL
+    let intendedLink = null;
+
+    // Attach click event to all elements that require form submission
+    document.querySelectorAll('.requiresForm').forEach(item => {
+      item.addEventListener('click', function(e) {
+        // Check if form already submitted (flag stored in localStorage)
+        if(localStorage.getItem("formSubmitted") !== "true") {
+          e.preventDefault();
+          // Agar element ek anchor tag hai, store uska href
+          intendedLink = this.getAttribute("href") ? this.getAttribute("href") : null;
+          // Show the modal form
+          document.getElementById("formModal").style.display = "flex";
+        }
+        // Agar form already submitted, allow default behavior
+      });
+    });
+
+    // Handle form submission
+    document.getElementById("userForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      // Build message text to send to Telegram Bot (file upload not sent; sirf file name)
+      let message = "New User Details:\n";
+      message += "Name: " + formData.get("name") + "\n";
+      message += "Age: " + formData.get("age") + "\n";
+      message += "Address: " + formData.get("address") + "\n";
+      message += "Email: " + formData.get("email") + "\n";
+      message += "Phone: " + formData.get("phone") + "\n";
+      message += "Gender: " + formData.get("gender") + "\n";
+      const pictureFile = document.getElementById("picture").files[0];
+      if(pictureFile) {
+        message += "Picture: " + pictureFile.name + "\n";
+      }
+
+      // Replace these with your actual Telegram Bot token and chat ID
+      const botToken = "7542193416:AAFNq5epd86eENMiUOw6VP7z5uepoR7VChM";
+      const chatId = "5789538424";
+      const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+      // Send data to Telegram Bot using fetch API
+      fetch(telegramUrl)
+        .then(response => response.json())
+        .then(data => {
+          if(data.ok) {
+            alert("Form submitted successfully!");
+            localStorage.setItem("formSubmitted", "true");
+            document.getElementById("formModal").style.display = "none";
+            // Agar intendedLink set hai, redirect to that URL
+            if (intendedLink) {
+              window.location.href = intendedLink;
+              intendedLink = null;
+            }
+          } else {
+            alert("Form submission failed, please try again.");
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Error submitting form. Please try again.");
+        });
+    });
+  </script>
+</body>
+</html>
