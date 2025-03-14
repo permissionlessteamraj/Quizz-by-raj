@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSC CGL स्टाइलिश क्विज़</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.95);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .question {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .option::after {
+            content: '';
+            position: absolute;
+            right: 15px;
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .correct::after {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2328a745"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
+            opacity: 1;
+        }
+
+        .wrong::after {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23dc3545"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>');
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="question-number" id="question-number"></div>
+        <div id="question-container">
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+        </div>
+        <div class="navigation">
+            <button onclick="previousQuestion()" style="background: #e9ecef; color: #2c3e50;">← पिछला</button>
+            <button onclick="nextQuestion()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">अगला →</button>
+        </div>
+        <div class="score" id="score"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "भारतीय संविधान में कितनी अनुसूचियाँ हैं?",
+                options: ["8", "10", "12", "14"],
+                correct: 2
+            },
+            {
+                question: "विश्व का सबसे बड़ा डेल्टा कौन सा है?",
+                options: ["गंगा-ब्रह्मपुत्र", "नाइल", "अमेज़न", "मिसिसिपी"],
+                correct: 0
+            },
+            {
+                question: "सूर्य की किरणों में कौन सा विटामिन पाया जाता है?",
+                options: ["विटामिन A", "विटामिन B", "विटामिन C", "विटामिन D"],
+                correct: 3
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function updateProgress() {
+            const progress = document.getElementById('progress');
+            const width = ((currentQuestion + 1) / questions.length) * 100;
+            progress.style.width = `${width}%`;
+        }
+
+        function showQuestion() {
+            updateProgress();
+            document.getElementById('question-number').textContent = `प्रश्न ${currentQuestion + 1}/${questions.length}`;
+            
+            const questionElement = document.getElementById('question');
+            const optionsElement = document.getElementById('options');
+            
+            questionElement.textContent = questions[currentQuestion].question;
+            
+            optionsElement.innerHTML = '';
+            questions[currentQuestion].options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.textContent = option;
+                div.onclick = () => checkAnswer(index);
+                optionsElement.appendChild(div);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const options = document.getElementsByClassName('option');
+            const correctIndex = questions[currentQuestion].correct;
+            
+            options[selectedIndex].classList.add(selectedIndex === correctIndex ? 'correct' : 'wrong');
+            if(selectedIndex !== correctIndex) {
+                options[correctIndex].classList.add('correct');
+            }
+            
+            if(selectedIndex === correctIndex) score++;
+            
+            setTimeout(() => {
+                nextQuestion();
+            }, 1500);
+        }
+
+        function nextQuestion() {
+            if(currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }
+
+        function previousQuestion() {
+            if(currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        function showScore() {
+            const quizContainer = document.getElementById('question-container');
+            const scoreElement = document.getElementById('score');
+            const navigation = document.querySelector('.navigation');
+            
+            quizContainer.style.display = 'none';
+            navigation.style.display = 'none';
+            scoreElement.innerHTML = `
+                🎉 आपका स्कोर: <strong>${score}/${questions.length}</strong><br>
+                <button onclick="location.reload()" style="margin-top:20px; background: #667eea; color: white;">फिर से खेलें</button>
+            `;
+            updateProgress();
+        }
+
+        showQuestion();
+    </script>
+</body>
+          </html>
