@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>चैप्टर मेनू</title>
+    <style>
+        body {
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            background: linear-gradient(45deg, #1a1a1a, #2d3436);
+            min-height: 100vh;
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #fff;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+            font-size: 2.8em;
+        }
+
+        .chapters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .chapter-btn {
+            background: linear-gradient(135deg, #6c5ce7, #a66efa);
+            border: none;
+            border-radius: 15px;
+            padding: 25px 30px;
+            color: white;
+            font-size: 1.4em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chapter-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #a66efa, #6c5ce7);
+        }
+
+        .chapter-number {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .chapters-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .chapter-btn {
+                font-size: 1.2em;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 मेरे चैप्टर्स</h1>
+    
+    <div class="chapters-container">
+        <button class="chapter-btn">
+            <span class="chapter-number">1</span>
+            गणित के मूल सिद्धांत
+        </button>
+
+        <button class="chapter-btn">
+            <span class="chapter-number">2</span>
+            रसायन विज्ञान की बुनियाद
+        </button>
+
+        <button class="chapter-btn">
+            <span class="chapter-number">3</span>
+            भौतिकी के नियम
+        </button>
+
+        <button class="chapter-btn">
+            <span class="chapter-number">4</span>
+            जीव विज्ञान की दुनिया
+        </button>
+
+        <button class="chapter-btn">
+            <span class="chapter-number">5</span>
+            कंप्यूटर साइंस बेसिक्स
+        </button>
+       <button class="chapter-btn">
+            <span class="chapter-number">6</span>
+            raj
+        </button>
+
+        <button class="chapter-btn">
+            <span class="chapter-number">7</span>
+            इतिहास के महत्वपूर्ण घटनाक्रम
+        </button>
+         <button class="chapter-btn">
+            <span class="chapter-number">8</span>
+            कंप्यूटर साइंस बेसिक्स
+        </button>
+    </div>
+</body>
+</html>
